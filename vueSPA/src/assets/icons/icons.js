@@ -1,0 +1,58 @@
+import {
+  cilBell,
+  cilCalculator,
+  cilCalendar,
+  cilCheck,
+  cilLockLocked,
+  cilFile,
+  cilZoomIn,
+  cilList,
+  cilPencil,
+  cilPeople,
+  cilSettings,
+  cilSpeech,
+  cilSpeedometer,
+  cilUser,
+  cilBank,
+  cilEnvelopeClosed,
+  cilClock,
+  cilCommentBubble,
+  cibMinutemailer,
+  cibProtonmail,
+  cilEnvelopeOpen,
+  cilEnvelopeLetter,
+  cilUserFollow,
+  cilUserUnfollow
+} from '@coreui/icons'
+
+export const iconsSet = Object.assign(
+  {},
+  {},
+  {
+    cilBell,
+    cilCalculator,
+    cilCalendar,
+    cilCheck,
+    cilZoomIn,
+    cilLockLocked,
+    cilFile,
+    cilList,
+    cilPencil,
+    cilPeople,
+    cilSettings,
+    cilSpeech,
+    cilCommentBubble,
+    cilUser,
+    cilSpeedometer,
+    cilBank,
+    cilEnvelopeClosed,
+    cilClock,
+    cibMinutemailer,
+    cibProtonmail,
+    cilEnvelopeOpen,
+    cilEnvelopeLetter,
+    cilUserFollow,
+    cilUserUnfollow
+  }
+  
+)
