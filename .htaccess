@@ -1,0 +1,123 @@
+<IfModule mod_negotiation.c>
+        Options -Indexes
+</IfModule>
+
+<IfModule mod_headers.c>
+
+    # X-XSS-Protection
+    Header set X-XSS-Protection "1; mode=block"
+    
+    # X-Frame-Options
+    Header set X-Frame-Options SAMEORIGIN
+    
+    # X-Content-Type nosniff
+    Header set X-Content-Type-Options nosniff
+        
+    # Strict-Transport-Security
+    Header set Strict-Transport-Security "max-age=31536000" env=HTTPS
+    
+    # Set-Cookie
+    Header always edit Set-Cookie (.*) "$1; HTTPOnly; Secure"
+    
+    # No-Referrer-Header
+    Header set Referrer-Policy "no-referrer"
+    
+    # Expect-CT
+    Header set Expect-CT "enforce, max-age=21600"
+    
+    # Content-Security-Policy
+        Header set Content-Security-Policy "default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline';                             img-src data: blob: * 'unsafe-inline'; frame-src *; style-src * 'unsafe-inline';font-src  data: * 'unsafe-inline' 'unsafe-eval';"
+    
+    # Feature-Policy
+    Header always set Feature-Policy "fullscreen 'none'; microphone 'none'"
+    
+    # X-Permitted-Cross-Domain-Policies
+    Header set X-Permitted-Cross-Domain-Policies "none"
+    
+    #Cache-Control
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma no-cache
+    Header set Expires 0
+    
+    <FilesMatch "\.(ico|pdf|flv|swf|js|css|gif|png|jpg|jpeg|txt|doc|docx)$">
+        Header set Cache-Control "max-age=2592000, public"
+    </FilesMatch>
+    
+    <FilesMatch "\.(js|css|xml|gz)$">
+        Header append Vary Accept-Encoding
+    </FilesMatch>
+    
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews
+    </IfModule>
+
+    RewriteEngine On
+    DirectoryIndex index.html index.php # This line does the trick
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)/$ /$1 [L,R=301]
+
+    # Handle Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+</IfModule> 
+
+
+<Files "composer*">
+    Require all denied
+</Files>
+
+<Files ".env*">
+    Require all denied
+</Files>
+
+<Files ".htaccess">
+    Require all denied
+</Files>
+
+<Files "composer.lock*">
+    Require all denied
+</Files>
+
+<Files "robots.txt*">
+    Require all denied
+</Files>
+
+<Files ".styleci.yml*">
+    Require all denied
+</Files>
+
+<Files "web*">
+    Require all denied
+</Files>
+
+<Files "artisan*">
+    Require all denied
+</Files>
+
+
+#Block QUERY STRINGS
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{QUERY_STRING} (eval\() [NC,OR]
+    RewriteCond %{QUERY_STRING} (127\.0\.0\.1) [NC,OR]
+    RewriteCond %{QUERY_STRING} ([a-z0-9]{2000,}) [NC,OR]
+    RewriteCond %{QUERY_STRING} (javascript:)(.*)(;) [NC,OR]
+    RewriteCond %{QUERY_STRING} (base64_encode)(.*)(\() [NC,OR]
+    RewriteCond %{QUERY_STRING} (GLOBALS|REQUEST)(=|\[|%) [NC,OR]
+    RewriteCond %{QUERY_STRING} (<|%3C)(.*)script(.*)(>|%3) [NC,OR]
+    RewriteCond %{QUERY_STRING} (\\|\.\.\.|\.\./|~|`|<|>|\|) [NC,OR]
+    RewriteCond %{QUERY_STRING} (boot\.ini|etc/passwd|self/environ) [NC,OR]
+    RewriteCond %{QUERY_STRING} (thumbs?(_editor|open)?|tim(thumb)?)\.php [NC,OR]
+    RewriteCond %{QUERY_STRING} (\'|\")(.*)(drop|insert|md5|select|union) [NC]
+    RewriteRule .* - [F]
+</IfModule> 
